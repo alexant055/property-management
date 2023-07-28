@@ -14,19 +14,25 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
+
 	private ModelMapper mapper;
 	
+	@Autowired
+	public UserServiceImpl(ModelMapper mapper) {
+		 this.mapper = mapper;
+	}
+
 	@Override
 	public UserDTO register(UserDTO uDTO) {
-		//Convert the DTO to entity
+		// Convert the DTO to entity
 		UserEntity uEntity = mapper.map(uDTO, UserEntity.class);
-		//Save property
+		// Save property
 		uEntity = userRepository.save(uEntity);
-		//Convert the Entity to DTO
+		// Convert the Entity to DTO
 		UserDTO userDTO = mapper.map(uEntity, UserDTO.class);
-		
+		// To Skip the password in response
+		userDTO.setPassword(null);
+
 		return userDTO;
 	}
 

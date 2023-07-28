@@ -14,35 +14,35 @@ import com.golden.propertymanagement.service.PropertyService;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
-	
+
 	@Autowired
 	private PropertyRepository propertyRepository;
-	
+
 	@Autowired
 	private ModelMapper mapper;
-	
+
 	@Override
 	public PropertyDTO saveProperty(PropertyDTO pDto) {
-		//Convert the DTO to entity
+		// Convert the DTO to entity
 		PropertyEntity pEntity = mapper.map(pDto, PropertyEntity.class);
-		//Save property
+		// Save property
 		pEntity = propertyRepository.save(pEntity);
-		//Convert the Entity to DTO
+		// Convert the Entity to DTO
 		PropertyDTO propertyDTO = mapper.map(pEntity, PropertyDTO.class);
-		
+
 		return propertyDTO;
 	}
 
 	@Override
 	public List<PropertyDTO> getAll() {
-		//Get list of properties from DB
+		// Get list of properties from DB
 		List<PropertyEntity> entities = (List<PropertyEntity>) propertyRepository.findAll();
 		// Convert entity list to DTO list
 		List<PropertyDTO> pList = new ArrayList<>();
 		for (PropertyEntity propertyEntity : entities) {
 			pList.add(mapper.map(propertyEntity, PropertyDTO.class));
 		}
-		
+
 		return pList;
 	}
 
@@ -51,19 +51,19 @@ public class PropertyServiceImpl implements PropertyService {
 		try {
 			PropertyEntity propertyEntity = propertyRepository.findById(propertyId)
 					.orElseThrow(() -> new Exception("id: " + propertyId));
-			//Convert the DTO to entity
-			//Override DB values with request values
+			// Convert the DTO to entity
+			// Override DB values with request values
 			propertyEntity = mapper.map(propertyDTO, PropertyEntity.class);
 			propertyEntity.setId(propertyId);
-			//Save property
+			// Save property
 			propertyEntity = propertyRepository.save(propertyEntity);
-			//Convert the Entity to DTO
+			// Convert the Entity to DTO
 			propertyDTO = mapper.map(propertyEntity, PropertyDTO.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return propertyDTO;		
+		return propertyDTO;
 	}
 
 	@Override

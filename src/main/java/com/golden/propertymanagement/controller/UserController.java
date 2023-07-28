@@ -14,14 +14,14 @@ import com.golden.propertymanagement.service.UserService;
 @RestController
 @RequestMapping(value = "/api/v1/user")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
 
 	@PostMapping
 	public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
 		userDTO = userService.register(userDTO);
-		
+
 		return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
 	}
 }

@@ -16,10 +16,10 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	private ModelMapper mapper;
-	
+
 	@Autowired
 	public UserServiceImpl(ModelMapper mapper) {
-		 this.mapper = mapper;
+		this.mapper = mapper;
 	}
 
 	@Override

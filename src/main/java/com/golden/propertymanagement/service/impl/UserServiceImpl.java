@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO login(String email, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

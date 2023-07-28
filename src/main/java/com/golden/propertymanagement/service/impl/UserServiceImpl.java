@@ -1,5 +1,7 @@
 package com.golden.propertymanagement.service.impl;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	public UserServiceImpl(ModelMapper mapper) {
 		this.mapper = mapper;
+		// To Skip the password in response
+		mapper.typeMap(UserEntity.class, UserDTO.class).addMappings(map -> map.skip(UserDTO::setPassword));
 	}
 
 	@Override
@@ -27,18 +31,22 @@ public class UserServiceImpl implements UserService {
 		// Convert the DTO to entity
 		UserEntity uEntity = mapper.map(uDTO, UserEntity.class);
 		// Save property
-		uEntity = userRepository.save(uEntity);
+		uEntity = userRepository.save(uEntity);		
 		// Convert the Entity to DTO
-		UserDTO userDTO = mapper.map(uEntity, UserDTO.class);
-		// To Skip the password in response
-		userDTO.setPassword(null);
-
-		return userDTO;
+		return mapper.map(uEntity, UserDTO.class);
 	}
 
 	@Override
 	public UserDTO login(String email, String password) {
-		return null;
+		Optional<UserEntity> oEntity = userRepository.findByOwnerEmailAndPassword(email, password);
+		UserDTO userDTO = null;
+		
+		if(oEntity.isPresent()) {								
+			// Convert the Entity to DTO	
+			userDTO = mapper.map(oEntity.get(), UserDTO.class);
+		}
+		
+		return userDTO;
 	}
 
 }

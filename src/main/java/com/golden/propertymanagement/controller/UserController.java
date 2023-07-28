@@ -18,10 +18,17 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping
+	@PostMapping("/register")
 	public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
 		userDTO = userService.register(userDTO);
 
 		return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO userDTO) {
+		userDTO = userService.login(userDTO.getOwnerEmail(), userDTO.getPassword());
+
+		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 }

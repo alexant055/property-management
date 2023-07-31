@@ -2,6 +2,7 @@ package com.golden.propertymanagement.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,56 +15,54 @@ import com.golden.propertymanagement.service.PropertyService;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
-	
+
 	@Autowired
 	private PropertyRepository propertyRepository;
-	
+
 	@Autowired
 	private ModelMapper mapper;
-	
+
 	@Override
 	public PropertyDTO saveProperty(PropertyDTO pDto) {
-		//Convert the DTO to entity
+		// Convert the DTO to entity
 		PropertyEntity pEntity = mapper.map(pDto, PropertyEntity.class);
-		//Save property
+		// Save property
 		pEntity = propertyRepository.save(pEntity);
-		//Convert the Entity to DTO
-		PropertyDTO propertyDTO = mapper.map(pEntity, PropertyDTO.class);
-		
-		return propertyDTO;
+		// Convert the Entity to DTO
+		return mapper.map(pEntity, PropertyDTO.class);
 	}
 
 	@Override
 	public List<PropertyDTO> getAll() {
-		//Get list of properties from DB
+		// Get list of properties from DB
 		List<PropertyEntity> entities = (List<PropertyEntity>) propertyRepository.findAll();
 		// Convert entity list to DTO list
 		List<PropertyDTO> pList = new ArrayList<>();
 		for (PropertyEntity propertyEntity : entities) {
 			pList.add(mapper.map(propertyEntity, PropertyDTO.class));
 		}
-		
+
 		return pList;
 	}
 
 	@Override
 	public PropertyDTO updateProperty(PropertyDTO propertyDTO, Long propertyId) {
 		try {
-			PropertyEntity propertyEntity = propertyRepository.findById(propertyId)
-					.orElseThrow(() -> new Exception("id: " + propertyId));
-			//Convert the DTO to entity
-			//Override DB values with request values
-			propertyEntity = mapper.map(propertyDTO, PropertyEntity.class);
-			propertyEntity.setId(propertyId);
-			//Save property
-			propertyEntity = propertyRepository.save(propertyEntity);
-			//Convert the Entity to DTO
-			propertyDTO = mapper.map(propertyEntity, PropertyDTO.class);
+			Optional<PropertyEntity> propertyEntity = propertyRepository.findById(propertyId);
+			if (propertyEntity.isPresent()) {
+				// Convert the DTO to entity
+				// Override DB values with request values
+				PropertyEntity pEntity = mapper.map(propertyDTO, PropertyEntity.class);
+				pEntity.setId(propertyId);
+				// Save property
+				pEntity = propertyRepository.save(pEntity);
+				// Convert the Entity to DTO
+				propertyDTO = mapper.map(pEntity, PropertyDTO.class);
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return propertyDTO;		
+		return propertyDTO;
 	}
 
 	@Override

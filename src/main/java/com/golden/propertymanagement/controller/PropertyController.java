@@ -31,28 +31,24 @@ public class PropertyController {
 	@PostMapping
 	public ResponseEntity<PropertyDTO> save(@RequestBody PropertyDTO propertyDTO) {
 		propertyDTO = propertyService.saveProperty(propertyDTO);
-		
-		ResponseEntity<PropertyDTO> responseEntity = new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
-		
-		return responseEntity;
+
+		return new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
 	}
 
 	@GetMapping
 	public ResponseEntity<List<PropertyDTO>> getAllProperties() {
-		System.out.println(pmsDescription);
 		List<PropertyDTO> pList = propertyService.getAll();
 		return new ResponseEntity<>(pList, HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/{propertyId}")
-	public ResponseEntity<PropertyDTO> updateProperty(@RequestBody PropertyDTO propertyDTO, @PathVariable Long propertyId) {
+	public ResponseEntity<PropertyDTO> updateProperty(@RequestBody PropertyDTO propertyDTO,
+			@PathVariable Long propertyId) {
 		propertyDTO = propertyService.updateProperty(propertyDTO, propertyId);
-		
-		ResponseEntity<PropertyDTO> responseEntity = new ResponseEntity<>(propertyDTO, HttpStatus.OK);
-		
-		return responseEntity;
+
+		return new ResponseEntity<>(propertyDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{propertyId}")
 	public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId) {
 		propertyService.deleteProperty(propertyId);
